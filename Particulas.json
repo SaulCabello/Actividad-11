@@ -1,0 +1,35 @@
+[
+    {
+         "id": "123456789",
+         "origen_x": 1,
+         "origen_y": 1,
+         "destino_x": 4,
+         "destino_y": 4,
+         "velocidad": "50 km/h",
+         "red": 2,
+         "green": 3,
+         "blue": 4
+    },
+    {
+         "id": "216464457",
+         "origen_x": 0,
+         "origen_y": 0,
+         "destino_x": 4,
+         "destino_y": 4,
+         "velocidad": "40 km/h",
+         "red": 1,
+         "green": 2,
+         "blue": 3
+    },
+    {
+         "id": "987654321",
+         "origen_x": 2,
+         "origen_y": 2,
+         "destino_x": 4,
+         "destino_y": 4,
+         "velocidad": "60 km/h",
+         "red": 3,
+         "green": 4,
+         "blue": 5
+    }
+]
