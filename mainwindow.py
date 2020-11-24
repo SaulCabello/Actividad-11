@@ -23,9 +23,87 @@ class MainWindow(QMainWindow):
 
         self.ui.dibujar_pushButton.clicked.connect(self.dibujar)
         self.ui.limpiar_pushButton.clicked.connect(self.limpiar)
-
         self.scene = QGraphicsScene()
         self.ui.graphicsView.setScene(self.scene)
+
+        self.ui.actionId_ascendente.triggered.connect(self.id_ascendente)
+        self.ui.actionVelocidad_ascendente.triggered.connect(self.velocidad_ascendente)
+        self.ui.actionDistancia_descendente.triggered.connect(self.distancia_descendente)
+
+    @Slot()
+    def abrir_archivo(self):
+        ubicacion = QFileDialog.getOpenFileName(
+            self,
+            "Abrir archivo",
+            ".",
+            "JSON (*.json)"
+        )[0]
+        if self.mainclass.abrir(ubicacion):
+            QMessageBox.information(
+                self,
+                "Operacion exitosa",
+                "El archivo " + ubicacion + " se abrio correctamente"
+            )
+        else:
+            QMessageBox.critical(
+                self,
+                "Error",
+                "Error al abrir el archivo"
+            )
+
+    @Slot()
+    def guardar_archivo(self):
+        ubicacion = QFileDialog.getSaveFileName(
+            self,
+            "Guardar archivo",
+            ".",
+            "JSON (*.json)"
+        )[0]
+        if self.mainclass.guardar(ubicacion):
+            QMessageBox.information(
+                self,
+                "Operacion exitosa",
+                "El archivo " + ubicacion + " se guardo correctamente"
+            )
+        else:
+            QMessageBox.critical(
+                self,
+                "Error",
+                "Error al guardar el archivo"
+            )
+    
+    @Slot()
+    def agregar_inicio(self):
+        id = self.ui.id_lineEdit.text()
+        origen_x = self.ui.origen_x_spinBox.value()
+        origen_y = self.ui.origen_y_spinBox.value()
+        destino_x = self.ui.destino_x_spinBox.value()
+        destino_y = self.ui.destino_y_spinBox.value()
+        velocidad = self.ui.velocidad_lineEdit.text()
+        red = self.ui.red_spinBox.value()
+        green = self.ui.green_spinBox.value()
+        blue = self.ui.blue_spinBox.value()
+        particula = Particula(id, origen_x, origen_y, destino_x, destino_y, velocidad, red, green, blue)
+        self.mainclass.agregar_inicio(particula)
+    
+    @Slot()
+    def agregar_final(self):
+        id = self.ui.id_lineEdit.text()
+        origen_x = self.ui.origen_x_spinBox.value()
+        origen_y = self.ui.origen_y_spinBox.value()
+        destino_x = self.ui.destino_x_spinBox.value()
+        destino_y = self.ui.destino_y_spinBox.value()
+        velocidad = self.ui.velocidad_lineEdit.text()
+        red = self.ui.red_spinBox.value()
+        green = self.ui.green_spinBox.value()
+        blue = self.ui.blue_spinBox.value()
+        particula = Particula(id, origen_x, origen_y, destino_x, destino_y, velocidad, red, green, blue)
+        self.mainclass.agregar_final(particula)
+    
+    @Slot()
+    def mostrar(self):
+        self.ui.print.clear()
+        self.ui.print.insertPlainText(str(self.mainclass))
 
     @Slot()
     def tabla_mostrar(self):
@@ -102,88 +180,13 @@ class MainWindow(QMainWindow):
                 "Atención",
                 f"La partícula con el id '{id}' no ha sido encontrada"
             )
-    
-    @Slot()
-    def abrir_archivo(self):
-        ubicacion = QFileDialog.getOpenFileName(
-            self,
-            "Abrir archivo",
-            ".",
-            "JSON (*.json)"
-        )[0]
-        if self.mainclass.abrir(ubicacion):
-            QMessageBox.information(
-                self,
-                "Operacion exitosa",
-                "El archivo " + ubicacion + " se abrio correctamente"
-            )
-        else:
-            QMessageBox.critical(
-                self,
-                "Error",
-                "Error al abrir el archivo"
-            )
-
-    @Slot()
-    def guardar_archivo(self):
-        ubicacion = QFileDialog.getSaveFileName(
-            self,
-            "Guardar archivo",
-            ".",
-            "JSON (*.json)"
-        )[0]
-        if self.mainclass.guardar(ubicacion):
-            QMessageBox.information(
-                self,
-                "Operacion exitosa",
-                "El archivo " + ubicacion + " se guardo correctamente"
-            )
-        else:
-            QMessageBox.critical(
-                self,
-                "Error",
-                "Error al guardar el archivo"
-            )
-    
-    @Slot()
-    def agregar_inicio(self):
-        id = self.ui.id_lineEdit.text()
-        origen_x = self.ui.origen_x_spinBox.value()
-        origen_y = self.ui.origen_y_spinBox.value()
-        destino_x = self.ui.destino_x_spinBox.value()
-        destino_y = self.ui.destino_y_spinBox.value()
-        velocidad = self.ui.velocidad_lineEdit.text()
-        red = self.ui.red_spinBox.value()
-        green = self.ui.green_spinBox.value()
-        blue = self.ui.blue_spinBox.value()
-        particula = Particula(id, origen_x, origen_y, destino_x, destino_y, velocidad, red, green, blue)
-        self.mainclass.agregar_inicio(particula)
-    
-    @Slot()
-    def agregar_final(self):
-        id = self.ui.id_lineEdit.text()
-        origen_x = self.ui.origen_x_spinBox.value()
-        origen_y = self.ui.origen_y_spinBox.value()
-        destino_x = self.ui.destino_x_spinBox.value()
-        destino_y = self.ui.destino_y_spinBox.value()
-        velocidad = self.ui.velocidad_lineEdit.text()
-        red = self.ui.red_spinBox.value()
-        green = self.ui.green_spinBox.value()
-        blue = self.ui.blue_spinBox.value()
-        particula = Particula(id, origen_x, origen_y, destino_x, destino_y, velocidad, red, green, blue)
-        self.mainclass.agregar_final(particula)
-    
-    @Slot()
-    def mostrar(self):
-        self.ui.print.clear()
-        self.ui.print.insertPlainText(str(self.mainclass))
-
+        
     def wheelEvent(self, event):
         if event.delta() > 0:
             self.ui.graphicsView.scale(1.2, 1.2)
         else:
             self.ui.graphicsView.scale(0.8, 0.8)
-    
+
     @Slot()
     def dibujar(self):
         pen = QPen()
@@ -209,3 +212,130 @@ class MainWindow(QMainWindow):
     @Slot()
     def limpiar(self):
         self.scene.clear()
+        
+    @Slot()
+    def id_ascendente(self):
+        self.ui.print.clear()
+        self.ui.tabla.clear()
+        self.ui.tabla.setColumnCount(10)
+        headers = ["Id", "Origen en x", "Origen en y", "Destino en x", "Destino en y", "Velocidad", "Distancia", "Red", "Green", "Blue"]
+        self.ui.tabla.setHorizontalHeaderLabels(headers)
+        self.ui.tabla.setRowCount(len(self.mainclass))
+        particulas = []
+        for particula in self.mainclass:
+            particulas.append(particula)
+        particulas.sort()
+
+        row = 0
+        for particula in particulas:
+            id_widget = QTableWidgetItem(particula.id)
+            origen_x_widget = QTableWidgetItem(str(particula.origen_x))
+            origen_y_widget = QTableWidgetItem(str(particula.origen_y))
+            destino_x_widget = QTableWidgetItem(str(particula.destino_x))
+            destino_y_widget = QTableWidgetItem(str(particula.destino_y))
+            velocidad_widget = QTableWidgetItem(particula.velocidad)
+            distancia_widget = QTableWidgetItem(str(particula.distancia))
+            red_widget = QTableWidgetItem(str(particula.red))
+            green_widget = QTableWidgetItem(str(particula.green))
+            blue_widget = QTableWidgetItem(str(particula.blue))
+
+            self.ui.tabla.setItem(row, 0, id_widget)
+            self.ui.tabla.setItem(row, 1, origen_x_widget)
+            self.ui.tabla.setItem(row, 2, origen_y_widget)
+            self.ui.tabla.setItem(row, 3, destino_x_widget)
+            self.ui.tabla.setItem(row, 4, destino_y_widget)
+            self.ui.tabla.setItem(row, 5, velocidad_widget)
+            self.ui.tabla.setItem(row, 6, distancia_widget)
+            self.ui.tabla.setItem(row, 7, red_widget)
+            self.ui.tabla.setItem(row, 8, green_widget)
+            self.ui.tabla.setItem(row, 9, blue_widget)
+
+            row += 1
+        
+        for particula in particulas:
+            self.ui.print.insertPlainText(str(particula))
+
+    @Slot()
+    def velocidad_ascendente(self):
+        self.ui.print.clear()
+        self.ui.tabla.clear()
+        self.ui.tabla.setColumnCount(10)
+        headers = ["Id", "Origen en x", "Origen en y", "Desitno en x", "Destino en y", "Velocidad", "Distancia", "Red", "Green"," Blue"]
+        self.ui.tabla.setHorizontalHeaderLabels(headers)
+        self.ui.tabla.setRowCount(len(self.mainclass))
+        particulas = []
+        for particula in self.mainclass:
+            particulas.append(particula)
+        particulas.sort(key=Particula.sort_by_velocidad)
+
+        row = 0
+        for particula in particulas:
+            id_widget = QTableWidgetItem(particula.id)
+            origen_x_widget = QTableWidgetItem(str(particula.origen_x))
+            origen_y_widget = QTableWidgetItem(str(particula.origen_y))
+            destino_x_widget = QTableWidgetItem(str(particula.destino_x))
+            destino_y_widget = QTableWidgetItem(str(particula.destino_y))
+            velocidad_widget = QTableWidgetItem(particula.velocidad)
+            distancia_widget = QTableWidgetItem(str(particula.distancia))
+            red_widget = QTableWidgetItem(str(particula.red))
+            green_widget = QTableWidgetItem(str(particula.green))
+            blue_widget = QTableWidgetItem(str(particula.blue))
+
+            self.ui.tabla.setItem(row, 0, id_widget)
+            self.ui.tabla.setItem(row, 1, origen_x_widget)
+            self.ui.tabla.setItem(row, 2, origen_y_widget)
+            self.ui.tabla.setItem(row, 3, destino_x_widget)
+            self.ui.tabla.setItem(row, 4, destino_y_widget)
+            self.ui.tabla.setItem(row, 5, velocidad_widget)
+            self.ui.tabla.setItem(row, 6, distancia_widget)
+            self.ui.tabla.setItem(row, 7, red_widget)
+            self.ui.tabla.setItem(row, 8, green_widget)
+            self.ui.tabla.setItem(row, 9, blue_widget)
+
+            row += 1
+
+        for particula in particulas:
+            self.ui.print.insertPlainText(str(particula))
+
+    @Slot()
+    def distancia_descendente(self):
+        self.ui.print.clear()
+        self.ui.tabla.clear()
+        self.ui.tabla.setColumnCount(10)
+        headers = ["Id", "Origen en x", "Origen en y", "Destino en x", "Destino en y", "Velocidad", "Distancia", "Red", "Green", "Blue"]
+        self.ui.tabla.setHorizontalHeaderLabels(headers)
+        self.ui.tabla.setRowCount(len(self.mainclass))
+
+        particulas = []
+        for particula in self.mainclass:
+            particulas.append(particula)
+        particulas.sort(key=lambda particula: particula.distancia, reverse=True)
+
+        row = 0
+        for particula in particulas:
+            id_widget = QTableWidgetItem(particula.id)
+            origen_x_widget = QTableWidgetItem(str(particula.origen_x))
+            origen_y_widget = QTableWidgetItem(str(particula.origen_y))
+            destino_x_widget = QTableWidgetItem(str(particula.destino_x))
+            destino_y_widget = QTableWidgetItem(str(particula.destino_y))
+            velocidad_widget = QTableWidgetItem(particula.velocidad)
+            distancia_widget = QTableWidgetItem(str(particula.distancia))
+            red_widget = QTableWidgetItem(str(particula.red))
+            green_widget = QTableWidgetItem(str(particula.green))
+            blue_widget = QTableWidgetItem(str(particula.blue))
+
+            self.ui.tabla.setItem(row, 0, id_widget)
+            self.ui.tabla.setItem(row, 1, origen_x_widget)
+            self.ui.tabla.setItem(row, 2, origen_y_widget)
+            self.ui.tabla.setItem(row, 3, destino_x_widget)
+            self.ui.tabla.setItem(row, 4, destino_y_widget)
+            self.ui.tabla.setItem(row, 5, velocidad_widget)
+            self.ui.tabla.setItem(row, 6, distancia_widget)
+            self.ui.tabla.setItem(row, 7, red_widget)
+            self.ui.tabla.setItem(row, 8, green_widget)
+            self.ui.tabla.setItem(row, 9, blue_widget)
+
+            row += 1
+
+        for particula in particulas:
+            self.ui.print.insertPlainText(str(particula))
