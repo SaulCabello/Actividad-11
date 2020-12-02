@@ -1,6 +1,7 @@
 from PySide2.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QTableWidgetItem, QGraphicsScene
 from PySide2.QtCore import Slot
 from PySide2.QtGui import QPen, QColor
+from pprint import pformat
 from ui_mainwindow import Ui_MainWindow
 from Particula.mainclass import MainClass
 from Particula.particula import Particula
@@ -8,6 +9,7 @@ from Particula.particula import Particula
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
+        self.grafo = {}
         self.mainclass = MainClass()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
@@ -16,7 +18,8 @@ class MainWindow(QMainWindow):
 
         self.ui.agregar_inicio_pushButton.clicked.connect(self.agregar_inicio)
         self.ui.agregar_final_pushButton.clicked.connect(self.agregar_final)
-        self.ui.mostrar_pushButton.clicked.connect(self.mostrar)
+        self.ui.mostrar_datos_pushButton.clicked.connect(self.mostrar_datos)
+        self.ui.mostrar_grafo_pushButton.clicked.connect(self.mostrar_grafo)
 
         self.ui.tabla_mostrar_pushButton.clicked.connect(self.tabla_mostrar)
         self.ui.tabla_buscar_pushButton.clicked.connect(self.tabla_buscar)
@@ -101,7 +104,7 @@ class MainWindow(QMainWindow):
         self.mainclass.agregar_final(particula)
     
     @Slot()
-    def mostrar(self):
+    def mostrar_datos(self):
         self.ui.print.clear()
         self.ui.print.insertPlainText(str(self.mainclass))
 
@@ -339,3 +342,31 @@ class MainWindow(QMainWindow):
 
         for particula in particulas:
             self.ui.print.insertPlainText(str(particula))
+
+    @Slot()
+    def mostrar_grafo(self):
+        self.ui.print.clear()
+        self.grafo.clear()
+        for particula in self.mainclass:
+            origen_x = particula.origen_x
+            origen_y = particula.origen_y
+            destino_x = particula.destino_x
+            destino_y = particula.destino_y
+            distancia = particula.distancia
+
+            origen = (origen_x, origen_y)
+            destino = (destino_x, destino_y)
+            arista_o = (destino_x, destino_y, distancia)
+            arista_d = (origen_x, origen_y, distancia)
+
+            if origen in self.grafo:
+                self.grafo[origen].append(arista_o)
+            else:
+                self.grafo[origen] = [arista_o]
+
+            if destino in self.grafo:
+                self.grafo[destino].append(arista_d)
+            else:
+                self.grafo[destino] = [arista_d]
+        str = pformat(self.grafo, width=50, indent=1)
+        self.ui.print.insertPlainText(str)
