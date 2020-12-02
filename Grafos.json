@@ -11,7 +11,7 @@
          "velocidad": 90.0
     },
     {
-         "id": "2",
+         "id": "1",
          "origen_x": 0,
          "origen_y": 100,
          "destino_x": 200,
@@ -22,7 +22,7 @@
          "velocidad": 90.0
     },
     {
-         "id": "3",
+         "id": "1",
          "origen_x": 100,
          "origen_y": 100,
          "destino_x": 300,
